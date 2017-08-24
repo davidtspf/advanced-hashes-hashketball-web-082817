@@ -28,76 +28,96 @@ def game_hash
 end
 
 def num_points_scored(player_name)
-  game_hash.each do |place, team_data|
-    team_data[:players].each do |name, stats|
-      if player_name == name
-        return stats[:points]
+  game_hash.each do |location, blue_aspects|
+    blue_aspects.each do |each_blue_aspect, green_properties|
+      if each_blue_aspect == :players
+        green_properties.each do |each_green_property, blue_accomps|
+          if each_green_property == player_name
+            return blue_accomps[:points]
+          end
+        end
       end
     end
   end
 end
 
 def shoe_size(player_name)
-  game_hash.each do |place, team_data|
-    team_data[:players].each do |name, stats|
-      if player_name == name
-        return stats[:shoe]
+  game_hash.each do |location, blue_aspects|
+    blue_aspects.each do |each_blue_aspect, green_properties|
+      if each_blue_aspect == :players
+        green_properties.each do |each_green_property, blue_accomps|
+          if player_name == each_green_property
+            return blue_accomps[:shoe]
+          end
+        end
       end
     end
   end
 end
 
 def team_colors(team_name)
-  game_hash.each do |place, team_data|
-    if team_name == team_data[:team_name]
-      return team_data[:colors]
+  game_hash.each do |location, blue_aspects|
+    if team_name == blue_aspects[:team_name]
+      return blue_aspects[:colors]
     end
   end
 end
 
 def team_names
-  team_names = []
-  game_hash.each do |place, team_data|
-    team_names << team_data[:team_name]
+  team_names_array = []
+  game_hash.each do |location, blue_aspects|
+    if blue_aspects[:team_name]
+      team_names_array << blue_aspects[:team_name]
+    end
   end
-  return team_names
+  return team_names_array
 end
 
 def player_numbers(team_name)
-  jersey_numbers = []
-  game_hash.each do |place, team_data|
-    if team_name == team_data[:team_name]
-      team_data[:players].each do |name, stats|
-        jersey_numbers << stats[:number]
+  numbers_array = []
+  game_hash.each do |location, blue_aspects|
+    if blue_aspects[:team_name] == team_name
+      blue_aspects.each do |each_blue_aspect, green_properties|
+        if each_blue_aspect == :players
+          green_properties.each do |each_green_property, blue_accomps|
+            numbers_array << blue_accomps[:number]
+          end
+        end
       end
     end
   end
-  return jersey_numbers
+  return numbers_array
 end
 
 def player_stats(player_name)
-  player_stats = {}
-  game_hash.each do |place, team_data|
-    team_data[:players].each do |name, stats|
-      if player_name == name
-        player_stats = stats
+  game_hash.each do |location, blue_aspects|
+    blue_aspects.each do |each_blue_aspect, green_properties|
+      if each_blue_aspect == :players
+        green_properties.each do |each_green_property, blue_accomps|
+          if each_green_property == player_name
+            return blue_accomps
+          end
+        end
       end
     end
   end
-  return player_stats
 end
 
 def big_shoe_rebounds
-  shoe_size = 0
-  num_rebounds = 0
+  biggest_size = 0
+  players_rebounds = 0
 
-  game_hash.each do |place, team_data|
-    team_data[:players].each do |name, stats|
-      if stats[:shoe] > shoe_size
-        shoe_size = stats[:shoe]
-        num_rebounds = stats[:rebounds]
+  game_hash.each do |location, blue_aspects|
+    blue_aspects.each do |each_blue_aspect, green_properties|
+      if each_blue_aspect == :players
+        green_properties.each do |each_green_property, blue_accomps|
+          if blue_accomps[:shoe] > biggest_size
+            biggest_size = blue_accomps[:shoe]
+            players_rebounds = blue_accomps[:rebounds]
+          end
+        end
       end
-      return num_rebounds
     end
   end
+  return players_rebounds
 end
